@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1082982415759",
+    "project_id": "grinda-a63d6",
+    "storage_bucket": "grinda-a63d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082982415759:android:f8704beaee1098f7ce1ffa",
+        "android_client_info": {
+          "package_name": "com.example.grinda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082982415759-sa7kg6rqud9ck98fqt4t1imbj6aub81b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzvwyYvMns1arN9_ENCqPusEX0kCp80-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082982415759-sa7kg6rqud9ck98fqt4t1imbj6aub81b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
