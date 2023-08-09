@@ -7,19 +7,18 @@ import 'package:get_storage/get_storage.dart';
 import 'package:grinda/services.dart/service_handler.dart';
 import 'package:grinda/utils/styles.dart';
 import 'package:grinda/views/pages/complete_kyc.dart';
-import 'package:grinda/views/pages/proof_of_address.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 final serviceController = ServiceHandler();
-class StartKycController extends GetxController{
+class ProveOfAddressController extends GetxController{
    
    var _photoFile = Rxn<File>();
    var showNext = Rx(false);
    var isUploading = Rx(false);
    var hasUploaded = Rx(false);
    pickImage()async{
-    final file = await ImagePicker().pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front, maxHeight: 1000, maxWidth: 1000);
+    final file = await ImagePicker().pickImage(source: ImageSource.gallery, maxHeight: 1000, maxWidth: 1000);
     if(file ==null) return;
     final fileSourcePath = File(file.path);
 
@@ -48,23 +47,21 @@ class StartKycController extends GetxController{
   }  
 }
 
-class StartKyc extends StatelessWidget {
+class ProveOfAddress extends StatelessWidget {
 
-  StartKyc({Key? key}) : super(key: key);
-  StartKycController startKycController = Get.put(StartKycController());
+  ProveOfAddress({Key? key}) : super(key: key);
+  ProveOfAddressController proveOfAddressController = Get.put(ProveOfAddressController());
   
-  final userData = GetStorage().read('userDetails');
-  
-  
+  final userData = GetStorage().read('userDetails');  
 
   uploadPhoto(File _editedImg)async{
-  serviceController.UploadDpFile(_editedImg, userData['email']).then((response){
+  serviceController.UploadProveOfAddress(_editedImg, userData['email']).then((response){
     Get.snackbar('Message', response['msg']);
 
       if (response['status']=='done' && userData != null && userData is Map<String, dynamic>) {
         // Check if the 'userDetails' data is a Map and not null
-        startKycController.hasUploaded.value = true;
-        userData['profilePicture'] = response['img_file']; // Update the profilePics parameter
+        proveOfAddressController.hasUploaded.value = true;
+        userData['proveOfAddress'] = response['img_file']; // Update the profilePics parameter
         GetStorage().write('userDetails', userData); // Save the updated data back to the storage
       }
     });
@@ -81,41 +78,37 @@ class StartKyc extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 25,),
-              Text("Face Identification", style: titleHeader,),
+              Text("Prove of Address", style: titleHeader,),
               SizedBox(height: 10,),
-              Text("Upload your picture photograph to allow services providers connect with you easily", style: subTitle,),
+              Text("Upload your Electricity Bill or other documents containing your home address", style: subTitle,),
               SizedBox(height: 20,),
               //face id image
-              userData['profilePicture'] !=null && userData['profilePicture'] !='' ?
+              userData['proveOfAddress'] !=null && userData['proveOfAddress'] !='' ?
               // Obx(() {
               //     return 
                   Center(
                     child: Column(
                       
                       children: [
-                        Text('My Picture'),
+                        Text('Location Document'),
                         SizedBox(height:20),
-                        CircleAvatar(
-                          radius: 82,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(80),
-                            child:CachedNetworkImage(
-                              imageUrl:"${userData['profilePicture']}",
-                              width:160.0,
-                              height:160.0,
-                              ),
+
+                        CachedNetworkImage(
+                          imageUrl:"${userData['proveOfAddress']}",
+                          height:350.0,
                           ),
-                        ),
                         SizedBox(height: 50,),
+                        
                         TextButton(
-                          onPressed: ()=>Get.to(()=>ProveOfAddress()), child: Text('Continue KYC', style: TextStyle(color: Colors.white),),
+                          onPressed: ()=>Get.to(()=>CompleteKyc()), 
+                          child: Text('Continue KYC', style: TextStyle(color: Colors.white,),),
                           style: TextButton.styleFrom(
                             backgroundColor: Colors.green,
                             padding: EdgeInsets.all(15),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25)
                             )
-                          ),
+                          ), 
                           )
                       ],
                     ),
@@ -128,35 +121,34 @@ class StartKyc extends StatelessWidget {
                   return Column(
                     children: [
                       Container(
-                        child: startKycController._photoFile.value !=null ?
+                        child: proveOfAddressController._photoFile.value !=null ?
                         Image.file( 
-                          startKycController._photoFile.value!,
-                          width:150,
-                          height:150,
+                          proveOfAddressController._photoFile.value!,
+                          
+                          height:350,
                           ) : 
                           Image.asset(
                             'assets/user_icon.jpg',
-                            width:150,
-                            height:150,
+                            height:350,
                             ),
                         ),
 
                         SizedBox(height: 20,),
 
-                        !startKycController.showNext.value ? 
-                        TextButton.icon(onPressed: ()=>startKycController.pickImage(), icon: const Icon(Icons.camera_alt_outlined), label: const Text('Take Picture')):Text(''),
+                        !proveOfAddressController.showNext.value ? 
+                        TextButton.icon(onPressed: ()=>proveOfAddressController.pickImage(), icon: const Icon(Icons.file_upload_outlined), label: const Text('Select FIle')):Text(''),
                         
                         // show upload button or next button
-                         startKycController.hasUploaded.value ? 
+                         proveOfAddressController.hasUploaded.value ? 
                          Column(
                            children: [
                             Text('File Uploaded'),
                             TextButton(
-                              onPressed: ()=>Get.to(()=>ProveOfAddress()), 
-                              child: Text('Continue KYC', style: TextStyle(color: Colors.white),),
+                              onPressed: ()=>Get.to(()=>CompleteKyc()), 
+                              child: Text('Continue KYC'),
                               style: TextButton.styleFrom(
-                                padding: EdgeInsets.all(15),
                                 backgroundColor: Colors.green,
+                                padding: EdgeInsets.all(8),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25)
                                 )
@@ -166,13 +158,19 @@ class StartKyc extends StatelessWidget {
                          )
                          :
                         Container(
-                        child: startKycController._photoFile.value !=null ?
-                          TextButton(onPressed: (){
-                                startKycController.isUploading.value = true;
-                                uploadPhoto(startKycController._photoFile.value!); 
-                                startKycController.showNext.value = true;
+                        margin: EdgeInsets.symmetric(vertical: 12),
+                        child: proveOfAddressController._photoFile.value !=null ?
+                          TextButton(
+                                onPressed: (){
+                                proveOfAddressController.isUploading.value = true;
+                                uploadPhoto(proveOfAddressController._photoFile.value!); 
+                                proveOfAddressController.showNext.value = true;
                                 },
-                                child:  startKycController.isUploading.value ? Text('Uploading. Please Wait!') : const Text('Save Picture')
+                                child:  proveOfAddressController.isUploading.value ? Text('Uploading. Please Wait!') : const Text('COntinue Upload File', style: TextStyle(color: Colors.white),),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  padding: EdgeInsets.all(15)
+                                ),                                
                                 )
                             :
                           Text(''),

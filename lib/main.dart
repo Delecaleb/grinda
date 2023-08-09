@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:grinda/authentication/authenticationrepository.dart';
 import 'package:grinda/controllers/geolocation_controller.dart';
 import 'package:grinda/views/onboard/onbord.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:grinda/views/pages/login.dart';
-import 'package:grinda/views/pages/register.dart';
 Future main() async{
   await GetStorage.init();
   final box = GetStorage();
@@ -42,8 +40,7 @@ class MyApp extends StatelessWidget {
     print(showOnboard);
     return GetMaterialApp(
       // routes: ,
-      theme: ThemeData(
-      
+      theme: ThemeData(      
         primarySwatch: const MaterialColor(0xFF4CAF50, <int, Color>{
             50: Color(0xFF4CAF05),
             100: Color(0xFF4CAF10),
@@ -55,7 +52,6 @@ class MyApp extends StatelessWidget {
             700: Color(0xFF4CAF70),
             800: Color(0xFF4CAF80),
             900: Color(0xFF4CAF90),
-
         }),
       ),
       home: showOnboard ? OnboardScreen() : LoginScreen(),

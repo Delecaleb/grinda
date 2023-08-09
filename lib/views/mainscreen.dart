@@ -8,11 +8,13 @@ import 'package:grinda/services.dart/service_handler.dart';
 import 'package:grinda/utils/styles.dart';
 import 'package:grinda/views/ServiceProviderTrackingScreen.dart';
 import 'package:grinda/views/pages/start_kyc.dart';
+import 'package:grinda/views/pay.dart';
 import 'package:grinda/widgets/animation.dart';
 import 'package:grinda/widgets/widgets.dart';
 
 import '../controllers/controllers.dart';
 import '../controllers/geolocation_controller.dart';
+import '../transaction_history.dart';
 
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
@@ -97,9 +99,17 @@ class MainScreen extends StatelessWidget {
                   SizedBox(height: 15,),
                   Row(
                     children: [
-                      ActionIconBtnWidget(title: 'Add Money', icon: Icons.add),
+                      GestureDetector(
+                        child: ActionIconBtnWidget(title: 'Add Money', icon: Icons.add),
+                        onTap: () => Get.to(()=>AddMoney()),
+                      ), 
                       SizedBox(width: 20,),
-                      ActionIconBtnWidget(title: 'Add Money', icon: Icons.history),
+                      
+                      GestureDetector(
+                          child: ActionIconBtnWidget(title: 'History', icon: Icons.history),
+                          onTap: ()=>Get.to(TransactionHistory()),
+                      )                      
+                    
                     ],
                   ),
                   SizedBox(height: 15,),

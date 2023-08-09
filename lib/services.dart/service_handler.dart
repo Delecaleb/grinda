@@ -155,6 +155,33 @@ class ServiceHandler{
  
   }
 
+  Future UploadProveOfAddress(File filePath, String user)async{
+  var uri = Uri.parse(mainUri);
+  var request = http.MultipartRequest('POST', uri);
+
+  var fileStream = http.ByteStream(Stream.castFrom(filePath.openRead()));
+  var length = await filePath.length();
+
+  var multipartFile = http.MultipartFile('file', fileStream, length,
+      filename: filePath.path.split('/').last);
+
+  request.files.add(multipartFile);
+
+  request.fields['user'] = user;
+  request.fields['action'] = 'upload_prove_ofaddress';
+
+  var response = await http.Response.fromStream(await request.send());
+
+  if (response.statusCode == 200) {
+    final responseData = json.decode(response.body);
+    
+    return responseData;
+  } else {
+    throw "Connection error";
+  }
+ 
+  }
+
   Future GetKYCStatus(String user)async{
     var map = Map<String, dynamic>();
     map['user_id'] = user;
@@ -199,6 +226,25 @@ class ServiceHandler{
 
     return responseData.map((mapdata) => CompletedOrdersModel.fromJson(mapdata)).toList();
     
+  } else {
+    throw "Connection Error";
+  }
+}
+
+Future RateServiceProvider(user_id, ServiceProviderModel serviceProvider, rating) async {
+  var map = Map<String, dynamic>();
+  map['service_user'] = user_id;
+  map['action'] = 'rate_service_provider';
+  map['service_provider'] = serviceProvider.email;
+  map['service'] = serviceProvider.jobTitle;
+  map['rating'] = rating.toString();
+
+  http.Response response = await http.post(Uri.parse(mainUri), body: map);
+  if (response.statusCode == 200) {
+    final responseData = json.decode(response.body);
+    print(responseData);
+    return responseData;
+
   } else {
     throw "Connection Error";
   }
