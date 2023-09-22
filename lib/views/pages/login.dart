@@ -6,7 +6,6 @@ import 'package:get/get_core/get_core.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:grinda/views/home.dart';
 import 'package:grinda/views/pages/register.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 
 import '../../controllers/login_controller.dart';
 import '../../widgets/widgets.dart';

@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:get_storage/get_storage.dart";
 import 'package:flutter_paystack/flutter_paystack.dart';
 import "package:grinda/utils/styles.dart";
@@ -14,7 +15,7 @@ class AddMoney extends StatefulWidget {
   final box = GetStorage().read('userDetails');
   TextEditingController emailController = TextEditingController();
 class _AddMoneyState extends State<AddMoney> {
-  var publicKey = 'sk_live_46f366db1135517a691404ef07295478045211ad';
+  var publicKey = 'pk_live_ad1eb7b0e3aadb304a73e3bf55ca1af3a73ddb9d';
   final plugin = PaystackPlugin();
 
   @override
@@ -45,19 +46,25 @@ class _AddMoneyState extends State<AddMoney> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Fund My Wallet', style: titleHeader,),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(
             children: [
-              Text('Add money to your wallet', style: titleHeader,),
+              
               SizedBox(height: 20,),
-              Text('Dummy text',),
+              Text('Enter Amount',),
               SizedBox(height: 15,),
               TextField(
+                style: TextStyle(fontSize: 20),
                 controller: amountController,
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                ],
                 decoration: InputDecoration(
                   labelText: 'Amount',
       

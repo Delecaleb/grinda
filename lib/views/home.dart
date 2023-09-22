@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         // animationCurve: Curves.easeIn,
         buttonBackgroundColor: Colors.green,
-        animationDuration: Duration(milliseconds: 350),
+        animationDuration: Duration(milliseconds: 100),
         height: 60,
         items: [
         //  BottomNavigationBarItem(
