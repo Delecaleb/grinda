@@ -3,10 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:grinda/authentication/authenticationrepository.dart';
-import 'package:grinda/models/models.dart';
 import 'package:grinda/services.dart/service_handler.dart';
 
+import '../models/user_model.dart';
 import '../views/home.dart';
 
 
@@ -24,6 +23,7 @@ class SignUpController extends GetxController {
   final city = TextEditingController();
   final address = TextEditingController();
   final password = TextEditingController();
+  final refferalCode = TextEditingController();
 
   Future createUser(UserModel user) async{
     // final docUser = _db.collection('registered_users').doc();
@@ -45,6 +45,7 @@ class SignUpController extends GetxController {
     try{
 
         servicehandler.LoginUser(email, password).then((response){
+            if(response['message'].toLowerCase()=='done'){
             final responseMap = {
               "address" : response['address'],
               "city" : response['city'],
@@ -66,16 +67,34 @@ class SignUpController extends GetxController {
             _box.write('userDetails', responseMap);
             _box.write('hasLogin', true);
             Get.offAll(()=>HomeScreen());
+          }else{
+            Get.snackbar('Login Error', 'Login failed. ${response['message']}');
+          }
         });    
     }catch(error){
       Get.snackbar('Error', 'Login failed. ${error.toString()}');
     }
   }
 
+  void ResetUserPassword(email) async{
+  try{
+    servicehandler.ResetPassword(email).then((response){
+      if(response['message'].toLowerCase()=='done'){
+         Get.snackbar(' Successful', 'Reset Password request sent. Check your mail to continue');
+      }else{
+        Get.snackbar(' Error', 'Reset Password failed. ${response['message']}');
+      }
+    });
+    
+  }catch(error){
+    Get.snackbar('Error', 'Login failed. ${error.toString()}');
+  }
 }
 
-class UserDetailsController extends GetxController{
-  final userDetails = _box.read('userDetails');
+}
 
-  
+
+
+class UserDetailsController extends GetxController{
+  final userDetails = _box.read('userDetails'); 
 }

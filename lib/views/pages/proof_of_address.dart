@@ -145,7 +145,7 @@ class ProveOfAddress extends StatelessWidget {
                             Text('File Uploaded'),
                             TextButton(
                               onPressed: ()=>Get.to(()=>CompleteKyc()), 
-                              child: Text('Continue KYC'),
+                              child: Text('Continue KYC', style: TextStyle(color: Colors.white),),
                               style: TextButton.styleFrom(
                                 backgroundColor: Colors.green,
                                 padding: EdgeInsets.all(8),
@@ -166,7 +166,7 @@ class ProveOfAddress extends StatelessWidget {
                                 uploadPhoto(proveOfAddressController._photoFile.value!); 
                                 proveOfAddressController.showNext.value = true;
                                 },
-                                child:  proveOfAddressController.isUploading.value ? Text('Uploading. Please Wait!') : const Text('COntinue Upload File', style: TextStyle(color: Colors.white),),
+                                child:  proveOfAddressController.isUploading.value ? Text('Uploading. Please Wait!') : const Text('Continue Upload File', style: TextStyle(color: Colors.white),),
                                 style: TextButton.styleFrom(
                                   backgroundColor: Colors.green,
                                   padding: EdgeInsets.all(15)

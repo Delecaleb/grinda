@@ -55,6 +55,9 @@ dependencies:
   socket_io_client: ^2.0.2
   flutter_html: ^2.1.2
   flutter_paystack: ^1.0.7
+  flutter_cache_manager: ^3.3.1
+  connectivity_plus: ^2.1.0
+  share_plus: ^7.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

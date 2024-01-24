@@ -1,12 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:grinda/controllers/controllers.dart';
 import 'package:grinda/views/mainscreen.dart';
 import 'package:grinda/views/orders.dart';
 import 'package:grinda/views/profile.dart';  
-import 'package:geolocator/geolocator.dart';
+
+import '../controllers/app_controller.dart';
 
 class HomeScreen extends StatelessWidget {
    HomeScreen({Key? key}) : super(key: key);

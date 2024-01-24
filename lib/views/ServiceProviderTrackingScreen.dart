@@ -3,12 +3,13 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:grinda/models/models.dart';
 import 'package:grinda/service_providers_rating.dart';
 import 'package:grinda/services.dart/service_handler.dart';
 import 'package:grinda/utils/styles.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
+
+import '../models/service_provider_models.dart';
 
 class ServiceProviderTrackingScreen extends StatefulWidget {
   final ServiceProviderModel serviceProvider;
@@ -51,28 +52,29 @@ class _ServiceProviderTrackingScreenState extends State<ServiceProviderTrackingS
   late IO.Socket socket;
   @override
   void initState() {
-    print('object');
-    socket = IO.io('http://grindas.smart-school.online', IO.OptionBuilder().setTransports(['websocket']).setQuery({'email':box['email']}).build());
-
+    
     super.initState();
 
     timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
       getApprovalStatus();
     });
 
-    socket.connect();
     connectToServer();
   }
   // Image.asset('assets/rider.gif'),
 String address='';
 String eta='';
   void connectToServer(){
+    socket = IO.io(
+      'http://grindas.smart-school.online', 
+      IO.OptionBuilder().setTransports(['websocket'])
+      .setQuery({'email':box['email']})
+      .disableAutoConnect()
+      .build());
     
-    socket.onConnect((data){
-      print('connection established');
+    socket.connect();
 
-
-    });
+    socket.onConnect((data){  print('connection established'); });
     socket.onConnectError((data) => print('dl Error occured $data'));
 
     socket.on('update-location',(locationData){

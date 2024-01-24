@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:grinda/models/models.dart';
 import 'package:grinda/services.dart/service_handler.dart';
-import 'package:vector_math/vector_math.dart';
+
+import '../models/service_provider_models.dart';
 
 class GeolocatorController extends GetxController {
   final serviceSearchController= TextEditingController();

@@ -7,9 +7,10 @@ import 'package:grinda/controllers/login_controller.dart';
 import 'package:grinda/views/pages/complete_kyc.dart';
 import 'package:grinda/views/pages/start_kyc.dart';
 import 'package:grinda/views/profiles_pages/about.dart';
+import 'package:grinda/views/profiles_pages/help.dart';
 import 'package:grinda/widgets/widgets.dart';
 
-import '../models/models.dart';
+import '../models/completed_orders_models.dart';
 
 class ProfileScreen extends StatelessWidget {
   final userProfileController = Get.put(UserDetailsController());
@@ -44,7 +45,8 @@ class ProfileScreen extends StatelessWidget {
                     imageUrl:box['profilePicture'],
                     ),
                   ),
-                ):
+                )
+                :
                 ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: Image.asset(
@@ -84,7 +86,7 @@ class ProfileScreen extends StatelessWidget {
              child: Column(children: [
               ListTileWidget(listIcon: Icon(Icons.mail_outline_rounded), listTitle: 'Messages',),
               Divider(),
-              ListTileWidget(listTitle: 'Help', listIcon: Icon(Icons.help_outline_rounded)),
+              InkWell(child: ListTileWidget(listTitle: 'Help', listIcon: Icon(Icons.help_outline_rounded),), onTap: () => Get.to(()=>HelpScreen()),),
               Divider(),
               InkWell(onTap: () => Get.to(()=>AboutUs()),child: ListTileWidget(listTitle: 'About', listIcon: Icon(Icons.supervised_user_circle))),
               Divider(),

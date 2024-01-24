@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:grinda/controllers/dependency_injection.dart';
 import 'package:grinda/controllers/geolocation_controller.dart';
-import 'package:grinda/views/onboard/onbord.dart';
+import 'package:grinda/views/onboard/onboard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:grinda/views/pages/login.dart';
 Future main() async{
@@ -29,6 +30,7 @@ Future main() async{
   );
    
   runApp(MyApp(showOnboard:showOnboard));
+  DependencyInjection.init();
 }
 
 class MyApp extends StatelessWidget {

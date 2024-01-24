@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grinda/models/models.dart';
+import 'package:grinda/models/completed_orders_models.dart';
 import 'package:grinda/utils/styles.dart';
 import 'package:grinda/widgets/widgets.dart';
 
-import '../controllers/controllers.dart';
+import '../controllers/orders_controllers.dart';
 
 
 class OrderScreen extends StatelessWidget {
@@ -16,7 +16,18 @@ class OrderScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('My Orders'),
       ),
-      body: Obx(() => ListView.builder(
+      body: controller.orders.length <1 ?
+      Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/bucket.png', width: Get.width * 0.3,),
+            SizedBox(height: 20,),
+            Text('No Orders yet'),
+          ],
+        )
+      )
+      : Obx(() => ListView.builder(
             itemCount: controller.orders.length,
             itemBuilder: (context, index) {
               CompletedOrdersModel order = controller.orders[index];

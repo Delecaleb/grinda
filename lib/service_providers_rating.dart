@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:grinda/models/models.dart';
 import 'package:grinda/services.dart/service_handler.dart';
 import 'package:grinda/utils/styles.dart';
 import 'package:grinda/views/home.dart';
+
+import 'models/service_provider_models.dart';
 
 class UserRating extends StatefulWidget {
   ServiceProviderModel serviceProvider;

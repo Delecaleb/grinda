@@ -3,12 +3,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:grinda/controllers/controllers.dart';
 import 'package:grinda/controllers/login_controller.dart';
 import 'package:grinda/services.dart/service_handler.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
+
+import '../../controllers/kycdata_controllers.dart';
 
 final userProfileController = Get.put(UserDetailsController());
 

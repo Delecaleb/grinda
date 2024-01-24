@@ -3,8 +3,11 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 
-import '../models/models.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/completed_orders_models.dart';
+import '../models/service_provider_models.dart';
+import '../models/user_model.dart';
 class ServiceHandler{
   static final mainUri = "https://smart-school.online/grindas/users_function.php";
 
@@ -39,6 +42,22 @@ class ServiceHandler{
     }
   }
 
+  Future ResetPassword(email)async{
+    var map = Map<String, dynamic>();
+    
+    map['email']=email;
+    map['action']='reset_password';
+
+    http.Response response = await http.post(Uri.parse(mainUri), body: map);
+
+    if(response.statusCode == 200){
+      final responseData = json.decode(response.body);
+      return responseData;
+    }else{
+      throw "connection error";
+    }
+  }
+  
   Future acceptServiceProvider(userId,serviceProvider,service)async{
     var map = Map<String, dynamic>();
     
@@ -246,6 +265,20 @@ Future RateServiceProvider(user_id, ServiceProviderModel serviceProvider, rating
     return responseData;
 
   } else {
+    throw "Connection Error";
+  }
+}
+
+Future getPaymentHistory(userid)async{
+  var map = Map<String, dynamic>();
+  map['user_id'] = userid;
+
+  http.Response response = await http.post(Uri.parse(mainUri), body: map);
+  if(response.statusCode==200){
+    final responseData = json.decode(response.body);
+    print(responseData);
+    return(responseData);
+  }else{
     throw "Connection Error";
   }
 }

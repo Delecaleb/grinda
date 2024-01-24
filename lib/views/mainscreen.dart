@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:grinda/models/models.dart';
 import 'package:grinda/services.dart/service_handler.dart';
 import 'package:grinda/utils/styles.dart';
 import 'package:grinda/views/ServiceProviderTrackingScreen.dart';
@@ -11,14 +10,15 @@ import 'package:grinda/views/pages/start_kyc.dart';
 import 'package:grinda/views/pay.dart';
 import 'package:grinda/widgets/animation.dart';
 import 'package:grinda/widgets/widgets.dart';
-
-import '../controllers/controllers.dart';
+import 'package:share_plus/share_plus.dart';
+import '../controllers/kycdata_controllers.dart';
 import '../controllers/geolocation_controller.dart';
+import '../controllers/user_current_data_controllers.dart';
+import '../models/service_provider_models.dart';
 import '../transaction_history.dart';
 
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
-  final _user = GetStorage().read('userDetails');
   final GeolocatorController locationController =  Get.put(GeolocatorController());
 
   PageController _pageController = PageController(initialPage: 0);
@@ -86,7 +86,9 @@ class MainScreen extends StatelessWidget {
                   Row(
                     children: [
                       Text('Wallet Ballance', style: TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.w500),),
-                      IconButton(onPressed: () {},icon: Icon(Icons.remove_red_eye_outlined,color: Colors.white,size: 17,),),
+                      IconButton(onPressed: () {
+                        userCurrentData.accountBalance ="******" as RxInt;
+                      },icon: Icon(Icons.remove_red_eye_outlined,color: Colors.white,size: 17,),),
                     ],
                   ),
 
@@ -107,7 +109,7 @@ class MainScreen extends StatelessWidget {
                       
                       GestureDetector(
                           child: ActionIconBtnWidget(title: 'History', icon: Icons.history),
-                          onTap: ()=>Get.to(TransactionHistory()),
+                          onTap: ()=>Get.to(TransactionHistory(userId: box['email'],)),
                       )                      
                     
                     ],
@@ -116,8 +118,21 @@ class MainScreen extends StatelessWidget {
                 ],
               ),
             ),
+
+
+            
             Container(
-                color: Colors.white,
+                decoration:const  BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                  BoxShadow(
+                    color:Color.fromARGB(255, 197, 232, 198),
+                    offset: Offset(0, 1),
+                    spreadRadius: 1,
+                    blurRadius: 1
+                  )
+                ] 
+                ),
                 padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                 child: Column(
                   children: [
@@ -166,26 +181,39 @@ class MainScreen extends StatelessWidget {
                                                             snapshot.data![index];
                                                         return Card(
                                                           child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
+                                                            padding: const EdgeInsets.all(8.0),
                                                             child: Container(
                                                               color: Colors.white,
                                                               child: Row(
                                                                   children: [
                                                                     Container(
                                                                       width: MediaQuery.of(context).size.width * 0.46,
-                                                                      child: serviceProvider.profilePics !='' && serviceProvider.profilePics !=null ? Image.network(
+                                                                      child: serviceProvider.profilePics !='' && serviceProvider.profilePics !=null ? 
+                                                                      Image.network(
+                                                                        loadingBuilder:(context, child, loadingProgress){
+                                                                          if (loadingProgress == null) {
+                                                                                  // If the image is fully loaded, return the original child
+                                                                                  return child;
+                                                                                } else {
+                                                                                  // If the image is still loading, display a loading indicator
+                                                                                  return Center(
+                                                                                    child: CircularProgressIndicator(
+                                                                                      value: loadingProgress.expectedTotalBytes != null
+                                                                                          ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                                                                          : null,
+                                                                                    ),
+                                                                                  );
+                                                                                }
+                                                                        } ,
                                                                         serviceProvider.profilePics,
                                                                         width: MediaQuery.of(context).size.width,
                                                                       )
                                                                       :
                                                                       Text('Image not Available')
                                                                     ),
-                                                                    SizedBox(
-                                                                      width: 10,
-                                                                    ),
-                                                                    Container(
+                                                                    SizedBox(width: 10,),
+
+                                                                    Expanded(
                                                                       child: Column(
                                                                           children: [
                                                                       Text(
@@ -202,42 +230,29 @@ class MainScreen extends StatelessWidget {
                                                                           '${serviceProvider.jobTitle}'),
                                                                       Text(
                                                                           '${serviceProvider.description}'),
-                                                                      SizedBox(
-                                                                        height:
-                                                                            10,
+                                                                      
+                                                                      SizedBox( height:10,),
+                                                                      RateWidget(),
+                                                                      FutureBuilder<List<Placemark>>(
+                                                                      future: placemarkFromCoordinates(
+                                                                        (serviceProvider.latitude),
+                                                                        (serviceProvider.longitude),
                                                                       ),
-                                                                      RatingBar(
-                                                                        glowColor:
-                                                                            Colors.amber,
-                                                                        itemSize:
-                                                                            20.0,
-                                                                        glow:
-                                                                            true,
-                                                                        allowHalfRating:
-                                                                            true,
-                                                                        initialRating:
-                                                                            2.5,
-                                                                        direction:
-                                                                            Axis.horizontal,
-                                                                        itemCount:
-                                                                            5,
-                                                                        ratingWidget: RatingWidget(
-                                                                            full: Icon(
-                                                                              Icons.star,
-                                                                              color: Colors.amber[600],
-                                                                            ),
-                                                                            half: Icon(Icons.star_half, color: Colors.amber[100]),
-                                                                            empty: Icon(Icons.star_border_sharp)),
-                                                                        onRatingUpdate:
-                                                                            (rating) {
-                                                                          print(rating);
-                                                                        },
-                                                                      ),
-                                                                      SizedBox(
-                                                                        height:
-                                                                            10,
-                                                                      ),
-                                                                      Text("App. ${serviceProvider.distance} miles to you"),
+                                                                      builder: (context, snapshot) {
+                                                                        if (snapshot.connectionState == ConnectionState.done &&
+                                                                            snapshot.hasData &&
+                                                                            snapshot.data!.isNotEmpty) {
+                                                                          Placemark placemark = snapshot.data![0];
+                                                                          return Container(
+                                                                              child: Text("Currently at ${placemark.name} ${placemark.subThoroughfare} ${placemark.thoroughfare} ${placemark.street}, ${placemark.subLocality}, ${placemark.locality}")
+                                                                              );
+                                                                        } else {
+                                                                          return Text("Location information not available");
+                                                                        }
+                                                                      },
+                                                                    ),
+                                                                    Text('Approximately', style: IconTitle,),
+                                                                    Text("${serviceProvider.distance} miles to you"),
                                                                       
                                                                       // send notification if KYC has been completed else send them to kyc
                                                                       kycDataController.kycData.value['account_status'] !='' && kycDataController.kycData.value['account_status'] !=null && kycDataController.kycData.value['account_status'].toLowerCase() =='approved' ?
@@ -299,6 +314,8 @@ class MainScreen extends StatelessWidget {
                   ],
                 )
             ),
+
+            SizedBox(height: 20,),
             Obx(() {
                 return kycDataController.kycData.value['account_status'] !='' && kycDataController.kycData.value['account_status'] !=null && kycDataController.kycData.value['account_status'].toLowerCase() =='approved' ? 
                 Container()
@@ -317,7 +334,32 @@ class MainScreen extends StatelessWidget {
                 );
 
               }
-            ),            
+            ), 
+            SizedBox(
+              height: 20,
+            ),           
+            Container(
+              width: Get.width,
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 197, 232, 198),
+                    offset: Offset(0, 1),
+                    spreadRadius: 1,
+                    blurRadius: 1
+                  )
+                ] 
+              ),
+              child: ListTile(
+                onTap: ()=>Share.share('Grindas makes life easy. Sign up on Grindas to start conneting with service providers https://example.com', subject: 'Grindas App'),
+                title:  Text("Refer a Friend and Earn",style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),),
+                trailing:  Icon(Icons.share)
+                
+              )
+            ),
 
             SizedBox(
               height: 20,
@@ -326,35 +368,21 @@ class MainScreen extends StatelessWidget {
               width: Get.width,
                   padding: EdgeInsets.symmetric(vertical: 20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10) 
-                  ),
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ServiceCategoryWidget(title: 'Laundry', imageIcon:'assets/washing.png'),
-                      ServiceCategoryWidget(title: 'Repairs', imageIcon:"assets/mechanic.png"),
-                      ServiceCategoryWidget(title: 'Home Service', imageIcon:"assets/bucket.png"),
-                      ServiceCategoryWidget(title: 'Laundry', imageIcon:'assets/washing.png'),
-                      ServiceCategoryWidget(title: 'Repairs', imageIcon:"assets/mechanic.png"),
-                    ],
-                  ),
-                  SizedBox(height: 20,),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ServiceCategoryWidget(title: 'Electricals', imageIcon:'assets/electricals.png'),
-                      ServiceCategoryWidget(title: 'Deliveries', imageIcon:"assets/delivery.png"),
-                      ServiceCategoryWidget(title: 'Home Service', imageIcon:"assets/bucket.png"),
-                      ServiceCategoryWidget(title: 'Laundry', imageIcon:'assets/washing.png'),
-                      ServiceCategoryWidget(title: 'Repairs', imageIcon:"assets/mechanic.png"),
-                    ],
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 197, 232, 198),
+                    offset: Offset(0, 1),
+                    spreadRadius: 1,
+                    blurRadius: 1
                   )
-                ],
+                ] 
+              ),
+              child: ListTile(
+                title: Text('Total Bonuses'),
+
+                trailing: Text('20.00'),
               ),
             )
           ],

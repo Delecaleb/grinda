@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:grinda/utils/styles.dart';
@@ -10,8 +11,9 @@ class InputWidget extends StatelessWidget {
   
   String label;
   Icon inputIcon;
+  bool isPass;
   late TextEditingController input_controller;
-  InputWidget({super.key, required this.label, required this.input_controller, required this.inputIcon});
+  InputWidget({super.key, required this.isPass,  required this.label, required this.input_controller, required this.inputIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,7 @@ class InputWidget extends StatelessWidget {
       
       margin: EdgeInsets.only(bottom: 15),
       child: TextField(
+        obscureText: isPass,
         scrollPadding: EdgeInsets.only(bottom: 30),
         controller: input_controller,
         decoration: InputDecoration(
@@ -193,13 +196,16 @@ class _KYCAlertWidgetState extends State<KYCAlertWidget> {
   }
   @override
   void initState() {
-    if(box['accountStatus'].toLowerCase()!='approved' && showKYC){
+    if(box['accountStatus'] != null){
+      if(box['accountStatus'].toLowerCase()!='approved' && showKYC){
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      showKYCDialog();
-    });
-   
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
+          showKYCDialog();
+        });
+      
+        }
     }
+    
     super.initState();
   }
   @override
@@ -219,5 +225,34 @@ class PaddedContainerWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 10),
       child: child,
     );
+  }
+}
+
+
+class RateWidget extends StatelessWidget {
+  const RateWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RatingBar(
+              glowColor:  Colors.amber,
+              itemSize: 20.0,
+              glow: true,
+              allowHalfRating: true,
+              initialRating:2.5,
+              direction: Axis.horizontal,
+              itemCount: 5,
+              ratingWidget: RatingWidget(
+                  full: Icon(
+                    Icons.star,
+                    color: Colors.amber[600],
+                  ),
+                  half: Icon(Icons.star_half, color: Colors.amber[100]),
+                  empty: Icon(Icons.star_border_sharp)),
+              onRatingUpdate:
+                  (rating) {
+                print(rating);
+              },
+            );
   }
 }

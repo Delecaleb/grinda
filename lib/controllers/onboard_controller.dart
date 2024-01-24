@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
-
-import '../models/models.dart';
+import '../models/onboard_models.dart';
 
 class OnboardController extends GetxController{
    var currentScreen = 0.obs;
