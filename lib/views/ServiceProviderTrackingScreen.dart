@@ -25,23 +25,31 @@ class _ServiceProviderTrackingScreenState extends State<ServiceProviderTrackingS
   bool declined = false;
   late Timer timer;
   late Future getStatus;
-
+  final serviceHandler = ServiceHandler();
   final box = GetStorage().read('userDetails');
 
   void getApprovalStatus()async{
-      ServiceHandler().checkAcceptance(box['email'], widget.serviceProvider.email).then((response){
+    print('started');
+      serviceHandler.checkAcceptance(box['email'], widget.serviceProvider.email).then((response){
+        
         if(response['message'].toLowerCase()=='accepted'){
-          
+          if (timer.isActive) {
+              timer.cancel();
+            }
           setState(() {
             approval=true;
           });
         }
         else if(response['message'].toLowerCase()=='completed'){
-          timer.cancel();
+          if (timer.isActive) {
+                timer.cancel();
+              }
           Get.to(()=>UserRating(serviceProvider: widget.serviceProvider, userId: box['email'],));
         }
         else if(response['message'].toLowerCase()=='declined'){
-          timer.cancel();
+          if (timer.isActive) {
+                timer.cancel();
+              }
           setState(() {
             declined=true;
           });
@@ -166,16 +174,23 @@ String eta='';
                   ],
                 ),
                 approval ? 
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Color.fromARGB(255, 245, 245, 245)
-                  ),
-                  child:ListTile(
-                    leading: Image.asset('assets/rider.gif'),
-                    title: Text('Current Location: $address'),
-                    subtitle: Text('$eta mins to get to you'),
-                  )
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('${widget.serviceProvider.firstName} ${widget.serviceProvider.lastName} is on the way', style: topicHeader,),
+                    SizedBox(height: 10,),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Color.fromARGB(255, 245, 245, 245)
+                      ),
+                      child:ListTile(
+                        leading: Image.asset('assets/rider.gif'),
+                        title: Text('Current Location: $address'),
+                        subtitle: Text('$eta mins to get to you'),
+                      )
+                    ),
+                  ],
                 ) : Container(
                     child: Center(child: CircularProgressIndicator()),
                 ),

@@ -87,14 +87,21 @@ class MainScreen extends StatelessWidget {
                     children: [
                       Text('Wallet Ballance', style: TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.w500),),
                       IconButton(onPressed: () {
-                        userCurrentData.accountBalance ="******" as RxInt;
+                        if(userCurrentData.showBallance.value){
+                            userCurrentData.showBallance.value=false;
+                        }else{
+                            userCurrentData.showBallance.value=true;
+                        }
                       },icon: Icon(Icons.remove_red_eye_outlined,color: Colors.white,size: 17,),),
                     ],
                   ),
 
                   Obx(() {
                       return Container(
-                          child: Text('₦ ${userCurrentData.accountBalance}',style: TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w500),)
+                          child: userCurrentData.showBallance.value ? 
+                                Text('₦ ${userCurrentData.accountBalance.value}',style: TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w500))
+                                :
+                                Text("* * * * *", style: titleHeaderLight,)
                       );
                     }
                   ),
@@ -231,8 +238,11 @@ class MainScreen extends StatelessWidget {
                                                                       Text(
                                                                           '${serviceProvider.description}'),
                                                                       
-                                                                      SizedBox( height:10,),
+                                                                      SizedBox( height:5,),
                                                                       RateWidget(),
+                                                                      SizedBox(height: 5,),
+                                                                      Text('Currently Location '),
+                                                                      SizedBox(height: 5,),
                                                                       FutureBuilder<List<Placemark>>(
                                                                       future: placemarkFromCoordinates(
                                                                         (serviceProvider.latitude),
@@ -244,7 +254,7 @@ class MainScreen extends StatelessWidget {
                                                                             snapshot.data!.isNotEmpty) {
                                                                           Placemark placemark = snapshot.data![0];
                                                                           return Container(
-                                                                              child: Text("Currently at ${placemark.name} ${placemark.subThoroughfare} ${placemark.thoroughfare} ${placemark.street}, ${placemark.subLocality}, ${placemark.locality}")
+                                                                              child: Text("${placemark.name} ${placemark.street}, ${placemark.subLocality}, ${placemark.locality}")
                                                                               );
                                                                         } else {
                                                                           return Text("Location information not available");
@@ -366,7 +376,7 @@ class MainScreen extends StatelessWidget {
             ),
             Container(
               width: Get.width,
-                  padding: EdgeInsets.symmetric(vertical: 20),
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                   decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -379,10 +389,26 @@ class MainScreen extends StatelessWidget {
                   )
                 ] 
               ),
-              child: ListTile(
-                title: Text('Total Bonuses'),
-
-                trailing: Text('20.00'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                    Column(
+                      children: [
+                        const Text('Total Bonus'),
+                        SizedBox(height: 10,),
+                        Obx(() {
+                          return Text("${userCurrentData.totalReferrals.value}%", style: titleHeader,);
+                        }),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Image.asset('assets/bonus.png', width: Get.width*0.3,),
+                        SizedBox(height: 10,),
+                        Text('Invite Friends & Earn More')                    
+                      ],
+                    ),
+                ], 
               ),
             )
           ],

@@ -39,6 +39,7 @@ class _AddMoneyState extends State<AddMoney> {
 
     if(response.status==true){
       // call a function to add money to user ballance
+      
     }
   }
   
@@ -56,6 +57,7 @@ class _AddMoneyState extends State<AddMoney> {
             children: [
               
               SizedBox(height: 20,),
+              Image.asset('assets/card.jpg'),
               Text('Enter Amount',),
               SizedBox(height: 15,),
               TextField(

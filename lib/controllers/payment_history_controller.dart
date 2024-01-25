@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:grinda/services.dart/service_handler.dart';
 
 class PaymentHistoryController extends GetxController{
-  var paymentsList = [].obs;
+  RxList paymentsList = [].obs;
   RxBool isloading = false.obs;
 
   final serviceHandler = ServiceHandler();

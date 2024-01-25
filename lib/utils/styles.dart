@@ -10,6 +10,11 @@ TextStyle titleHeader = TextStyle(
    fontWeight: FontWeight.w700,
   fontSize: 20,
 );
+TextStyle titleHeaderLight = TextStyle(
+   fontWeight: FontWeight.w700,
+   color: Colors.white,
+  fontSize: 20,
+);
 TextStyle topicHeader = TextStyle(
    fontWeight: FontWeight.w500,
   fontSize: 20,

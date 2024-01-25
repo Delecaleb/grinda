@@ -5,9 +5,10 @@ import 'package:grinda/services.dart/service_handler.dart';
 class UserCurrentDataController extends GetxController{
   final serviceHandler = ServiceHandler();
   final _user = GetStorage().read('userDetails');
-
-  RxInt accountBalance = 0.obs;
-
+  RxBool showBallance = true.obs;
+  RxList currentData = [].obs;
+  RxDouble accountBalance = 0.0.obs;
+  RxDouble totalReferrals = 0.0.obs;
   @override
   void onInit() {
     getCurrentData();
@@ -15,12 +16,21 @@ class UserCurrentDataController extends GetxController{
     super.onInit();
   }
 
-  void getCurrentData(){
+
+   void getCurrentData()async{
     try{
-      serviceHandler.GetCurrentData(_user['email']).then((responseData){
-     
-     if(responseData['account_balance'] !=null && responseData['account_balance'] !=''){
-          accountBalance.value = responseData['account_balance']; 
+     await serviceHandler.GetCurrentData(_user["email"]).then((response){
+      print('bawo');
+      print(response);
+      final  responseData = response;
+     if(responseData["account_balance"] !=null && responseData["account_balance"] !=""){
+        double? balance = double.tryParse(responseData["account_balance"]);
+         double? referrals = double.tryParse(responseData["total_referrals"]);
+      if (balance != null) {
+          accountBalance.value = balance;
+      }
+      if(referrals != null)
+          totalReferrals.value = referrals*5;
      }
 
     });

@@ -9,7 +9,7 @@ import '../models/completed_orders_models.dart';
 import '../models/service_provider_models.dart';
 import '../models/user_model.dart';
 class ServiceHandler{
-  static final mainUri = "https://smart-school.online/grindas/users_function.php";
+  static final mainUri = "https://smart-school.online/gr indas/users_function.php";
 
   Future<dynamic> createUser(UserModel user) async {
   Map<String, dynamic> map = user.toJson(); // Assuming UserModel has a `toJson` method to convert it to a Map
@@ -223,17 +223,15 @@ class ServiceHandler{
     map['action'] = 'get_cur_data';
 
     http.Response response = await http.post(Uri.parse(mainUri), body: map);
-
     if(response.statusCode == 200){
       final responseData = json.decode(response.body);
-      
      return responseData;
     }else{
       throw "connection error";
     } 
   }
 
-   Future<List<CompletedOrdersModel>> GetCompletedOrders(user_id) async {
+  Future<List<CompletedOrdersModel>> GetCompletedOrders(user_id) async {
   var map = Map<String, dynamic>();
   map['user_id'] = user_id;
   map['action'] = 'get_completed_orders';
@@ -272,7 +270,7 @@ Future RateServiceProvider(user_id, ServiceProviderModel serviceProvider, rating
 Future getPaymentHistory(userid)async{
   var map = Map<String, dynamic>();
   map['user_id'] = userid;
-
+  map['action']='payment_history';
   http.Response response = await http.post(Uri.parse(mainUri), body: map);
   if(response.statusCode==200){
     final responseData = json.decode(response.body);
