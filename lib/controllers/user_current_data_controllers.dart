@@ -29,8 +29,9 @@ class UserCurrentDataController extends GetxController{
       if (balance != null) {
           accountBalance.value = balance;
       }
-      if(referrals != null)
+      if(referrals != null){
           totalReferrals.value = referrals*5;
+      }
      }
 
     });

@@ -124,11 +124,13 @@ String eta='';
                         
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
+                            child: widget.serviceProvider.profilePics !='' && widget.serviceProvider.profilePics !=null ? Image.network(
                               widget.serviceProvider.profilePics,
                               height: 90,
                               width: 90,
-                              ),
+                              ):
+                              CircleAvatar()
+                              ,
                             
                         ),
                         SizedBox(width: 20,),

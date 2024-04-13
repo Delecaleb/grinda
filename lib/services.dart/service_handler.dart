@@ -1,15 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:get/get.dart';
-
 import 'package:http/http.dart' as http;
 
 import '../models/completed_orders_models.dart';
 import '../models/service_provider_models.dart';
 import '../models/user_model.dart';
 class ServiceHandler{
-  static final mainUri = "https://smart-school.online/gr indas/users_function.php";
+  static const mainUri = "https://smart-school.online/grindas/users_function.php";
 
   Future<dynamic> createUser(UserModel user) async {
   Map<String, dynamic> map = user.toJson(); // Assuming UserModel has a `toJson` method to convert it to a Map
@@ -213,6 +210,7 @@ class ServiceHandler{
       
      return responseData;
     }else{
+      print(response.statusCode);
       throw "connection error";
     } 
   }

@@ -277,8 +277,8 @@ class MainScreen extends StatelessWidget {
                                                                       ElevatedButton(
                                                                           onPressed: ()=>Get.to(()=>StartKyc()),
                                                                           child: Text('CONNECT')
-                                                                      )
-
+                                                                      ),
+                                                                      
                                                                           ],
                                                                         ),
                                                                     ),
